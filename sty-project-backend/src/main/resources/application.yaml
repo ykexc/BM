@@ -1,0 +1,43 @@
+server:
+  port: 3000
+spring:
+  security:
+    jwt:
+      key: 'abcdefghijklmn'
+      expire: 72
+      limit:
+        base: 10
+        upgrade: 300
+        freq: 30
+  mail:
+    host: smtp.163.com
+    username: 15009283135@163.com
+    password: CFQGQQBXMJWZJJTU
+    port: 465
+    properties:
+      from: 15009283135@163.com
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+  rabbitmq:
+    addresses: localhost
+    username: huya
+    password: huya
+    virtual-host: /
+  web:
+    cors:
+      origin: '*'
+      credentials: false
+      methods: '*'
+    verify:
+      mail-limit: 60
+    flow:
+      limit: 2
+      period: 3
+      block: 30
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: 123456
