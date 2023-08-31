@@ -45,6 +45,15 @@ public class FlowUtil {
         });
     }
 
+    /**
+     * 多次频率限制, 超出范围封禁用户
+     * @param counterKey 计数键
+     * @param blockKey 黑名单键
+     * @param blockTime 封禁时间
+     * @param freq 请求频率限制
+     * @param period 限制时间
+     * @return 是否通过限流
+     */
     public boolean limitPeriodCheck(String counterKey, String blockKey, int blockTime, int freq, int period) {
         return this.internalCheck(counterKey, freq, period, isExceed -> {
             if (isExceed)

@@ -133,10 +133,10 @@ public class JWTUtil {
         return decodedJWT.getClaims().get("id").asInt();
     }
 
-    public Date expireTime() {
+    public Long getExpireTimeMilliseconds() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR, expire);
-        return calendar.getTime();
+        return calendar.getTime().getTime();
     }
 
     private boolean frequencyCheck(Integer userId) {

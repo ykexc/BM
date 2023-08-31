@@ -16,6 +16,6 @@ public class AuthorizeVo {
 
     String token;
 
-    Date expire;
+    Long expire;
 
 }

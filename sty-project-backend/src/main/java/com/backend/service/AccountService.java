@@ -14,6 +14,8 @@ public interface AccountService extends IService<Account> {
 
     Account findUserByUserNameOrEmail(String text);
 
+    Account findUserById(Integer id);
+
     String registerOrResetEmailVerifyCode(String email, String type, String ip);
 
     String registerEmailAccount(EmailRegisterVo info);

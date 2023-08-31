@@ -1,12 +1,28 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
-  }
 
-  return { count, doubleCount}
+interface User {
+    username: string
+    email: string
+    role: string
+    registerTime: Date | null
+}
+
+export default defineStore('user', {
+    state: (): User => {
+        return {
+            username: '',
+            email: '',
+            role: '',
+            registerTime: null
+        }
+    },
+    actions: {
+      updateInfo(user: User) {
+          this.username = user.username
+          this.email = user.email
+          this.role = user.role
+          this.registerTime = user.registerTime
+      }
+    }
 })

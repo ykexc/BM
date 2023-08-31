@@ -106,7 +106,7 @@ public class SecurityConfig {
         else {
             log.info("成功");
             AuthorizeVo vo = account.asViewObject(AuthorizeVo.class, e -> e.setToken(jwt));
-            vo.setExpire(jwtUtil.expireTime());
+            vo.setExpire(jwtUtil.getExpireTimeMilliseconds());
             writer.write(RestBean.success(vo).asJsonString());
         }
     }

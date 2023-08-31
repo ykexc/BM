@@ -56,7 +56,7 @@ public class FlowLimitFilter extends HttpFilter {
         synchronized (address.intern()) {
             if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(blockKey + address)))
                 return false;
-            return flowUtil.limitPeriodCheck(counterKey, blockKey, block, limit, period);
+            return flowUtil.limitPeriodCheck(counterKey, blockKey + address, block, limit, period);
         }
     }
 

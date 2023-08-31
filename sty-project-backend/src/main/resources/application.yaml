@@ -3,7 +3,7 @@ server:
 spring:
   security:
     jwt:
-      key: 'abcdefghijklmn'
+      key: 'abcdefghijklms'
       expire: 72
       limit:
         base: 10
@@ -33,7 +33,7 @@ spring:
     verify:
       mail-limit: 60
     flow:
-      limit: 2
+      limit: 10
       period: 3
       block: 30
   datasource:

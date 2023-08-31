@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {ElMessage} from "element-plus";
 
 const authItemName = "authorize"
@@ -9,8 +9,11 @@ const accessHeader = () => {
     }
 }
 
-const defaultError = (error: Error) => {
-    console.error(error)
+const defaultError = (error: Error | AxiosError) => {
+    if (error instanceof AxiosError) {
+        ElMessage.error(error.response?.data?.message)
+        return
+    }
     ElMessage.error('发生了一些错误，请联系管理员')
 }
 
@@ -19,11 +22,11 @@ const defaultFailure = (message: string, status: number, url: string) => {
     ElMessage.warning(message)
 }
 
-function takeAccessToken() {
+function takeAccessToken(): string | null {
     const str = localStorage.getItem(authItemName) || sessionStorage.getItem(authItemName);
     if (!str) return null
     const authObj = JSON.parse(str)
-    if (authObj.expire <= new Date()) {
+    if (authObj.expire <= new Date().getMilliseconds()) {
         deleteAccessToken()
         ElMessage.warning("登录状态已过期，请重新登录！")
         return null
@@ -31,7 +34,7 @@ function takeAccessToken() {
     return authObj.token
 }
 
-function storeAccessToken(remember: boolean, token: string, expire: Date) {
+function storeAccessToken(remember: boolean, token: string, expire: number) {
     const authObj = {
         token: token,
         expire: expire
@@ -95,8 +98,8 @@ function get(url: string, success: (e: any) => void, failure?: any) {
     internalGet(url, accessHeader(), success, failure ? failure : defaultFailure)
 }
 
-function unauthorized() {
-    return !takeAccessToken()
+function authorized(): boolean {
+    return takeAccessToken() != null
 }
 
-export {post, get, login, logout, unauthorized}
+export {post, get, login, logout, authorized}

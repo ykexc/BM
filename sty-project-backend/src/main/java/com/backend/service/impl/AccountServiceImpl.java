@@ -55,6 +55,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
+    public Account findUserById(Integer id) {
+        return this.query().eq("id", id).one();
+    }
+
+    @Override
     public String registerOrResetEmailVerifyCode(String email, String type, String ip) {
         synchronized (ip.intern()) {
             if (!this.verifyLimit(ip)) return "请求频繁, 请稍后再试";

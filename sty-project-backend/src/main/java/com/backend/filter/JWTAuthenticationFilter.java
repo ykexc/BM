@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ import static com.backend.utils.Const.ATTR_USER_ID;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
@@ -36,6 +38,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String headerToken = request.getHeader("Authorization");
         DecodedJWT decodedJWT = jwtUtil.resolveToken(headerToken);
+        log.info(String.valueOf(decodedJWT == null));
         if (decodedJWT != null) {
             UserDetails user = jwtUtil.toUser(decodedJWT);
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
