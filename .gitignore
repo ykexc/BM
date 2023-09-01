@@ -2,10 +2,9 @@
 log/
 HELP.md
 target/
-!sty-project-backend/mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-/sty-project-backend/mvnw.*
+sty-project-backend/mvnw.*
 ### STS ###
 .apt_generated
 .classpath
@@ -14,13 +13,13 @@ target/
 .settings
 .springBeans
 .sts4-cache
-./sty-project.iml
+sty-project.iml
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
-./sty-project-frontend/sty-project-frontend.iml
+sty-project-frontend/sty-project-frontend.iml
 
 ### NetBeans ###
 /nbproject/private/
