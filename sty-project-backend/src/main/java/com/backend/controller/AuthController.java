@@ -30,7 +30,7 @@ public class AuthController {
 
     @GetMapping
     public RestBean<String> test() {
-        return RestBean.success("huay");
+        return RestBean.success("huya");
     }
 
 

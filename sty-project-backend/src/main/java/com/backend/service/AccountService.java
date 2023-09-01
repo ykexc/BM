@@ -1,9 +1,7 @@
 package com.backend.service;
 
 import com.backend.entity.dto.Account;
-import com.backend.entity.vo.req.EmailRegisterVo;
-import com.backend.entity.vo.req.EmailResetVo;
-import com.backend.entity.vo.req.ResetConfirmVo;
+import com.backend.entity.vo.req.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -23,5 +21,9 @@ public interface AccountService extends IService<Account> {
     String resetConfirm(ResetConfirmVo resetConfirmVo);
 
     String emailReset(EmailResetVo resetVo);
+
+    String saveAccountEmail(Integer id, EmailSaveVo emailSaveVo);
+
+    String changePassword(Integer id, ChangePasswordVo vo);
 
 }

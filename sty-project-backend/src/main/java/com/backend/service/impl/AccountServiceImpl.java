@@ -1,28 +1,27 @@
 package com.backend.service.impl;
 
 import com.backend.entity.dto.Account;
-import com.backend.entity.vo.req.EmailRegisterVo;
-import com.backend.entity.vo.req.EmailResetVo;
-import com.backend.entity.vo.req.ResetConfirmVo;
+import com.backend.entity.vo.req.*;
 import com.backend.mapper.AccountMapper;
 import com.backend.service.AccountService;
 import com.backend.utils.Const;
 import com.backend.utils.FlowUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import static com.backend.utils.Const.VERIFY_EMAIL_DATA;
 
 /**
  * @author mqz
@@ -106,8 +105,35 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         String email = resetVo.getEmail(), password = resetVo.getPassword(), code = resetVo.getCode();
         String ok = resetConfirm(new ResetConfirmVo(email, code));
         if (ok != null) return ok;
-        boolean update = update().eq("email", email).set("password", encoder.encode(password )).update();
+        boolean update = update().eq("email", email).set("password", encoder.encode(password)).update();
         if (update) deleteRegisterEmail(email);
+        return update ? null : "更新失败,请联系管理员";
+    }
+
+    @Override
+    public synchronized String saveAccountEmail(Integer id, EmailSaveVo emailSaveVo) {
+        String email = emailSaveVo.getEmail(), verifyCode = emailSaveVo.getCode();
+        String code = stringRedisTemplate.opsForValue().get(VERIFY_EMAIL_DATA + email);
+        if (code == null) return "未发送验证码或验证码过期";
+        if (!code.equals(verifyCode)) return "验证码错误";
+        Account account = findUserByUserNameOrEmail(email);
+        if (account == null || account.getId().equals(id)) {
+            boolean update = update()
+                    .eq("id", id)
+                    .set("email", email)
+                    .update();
+            return update ? null : "更新失败,请联系管理员";
+        }
+        return "用户名存在";
+    }
+
+    @Override
+    public String changePassword(Integer id, ChangePasswordVo vo) {
+        String resetPassword = vo.getPassword(), newPassword = vo.getNewPassword();
+        Account user = query().eq("id", id).one();
+        String password = user.getPassword();
+        if (!encoder.matches(resetPassword, password)) return "当前密码错误";
+        boolean update = update().eq("id", id).set("password", encoder.encode(newPassword)).update();
         return update ? null : "更新失败,请联系管理员";
     }
 

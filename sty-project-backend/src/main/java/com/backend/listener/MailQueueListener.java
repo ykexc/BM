@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author mqz
@@ -36,6 +35,9 @@ public class MailQueueListener {
                     mail);
             case "reset" -> createMsg("您的密码重置邮件",
                     "你好，您正在执行重置密码操作，验证码: " + code + "，有效时间3分钟，如非本人操作，请无视。",
+                    mail);
+            case "reset-email" -> createMsg("您的邮箱密码重置邮件",
+                    "你好，您正在执行邮箱重置密码操作，验证码: " + code + "，有效时间3分钟，如非本人操作，请无视。",
                     mail);
             default -> null;
         };
