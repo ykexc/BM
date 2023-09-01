@@ -5,6 +5,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 sty-project-backend/mvnw.*
+.mvn/
 ### STS ###
 .apt_generated
 .classpath
