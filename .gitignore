@@ -1,40 +1,3 @@
-.idea/
-log/
-HELP.md
-target/
-!**/src/main/**/target/
-!**/src/test/**/target/
-sty-project-backend/mvnw.*
-.mvn/
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-sty-project.iml
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-sty-project-frontend/sty-project-frontend.iml
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
 # Logs
 logs
 *.log
@@ -57,6 +20,7 @@ coverage
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+.idea
 *.suo
 *.ntvs*
 *.njsproj
