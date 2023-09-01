@@ -5,9 +5,12 @@ import com.backend.entity.dto.AccountDetails;
 import com.backend.entity.vo.req.ChangePasswordVo;
 import com.backend.entity.vo.req.DetailsSaveVo;
 import com.backend.entity.vo.req.EmailSaveVo;
+import com.backend.entity.vo.req.SaveAccountPrivacyVo;
 import com.backend.entity.vo.resp.AccountDetailsVo;
+import com.backend.entity.vo.resp.AccountPrivacyVo;
 import com.backend.entity.vo.resp.AccountVo;
 import com.backend.service.AccountDetailsService;
+import com.backend.service.AccountPrivacyService;
 import com.backend.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,8 @@ public class AccountController {
     private final AccountService accountService;
 
     private final AccountDetailsService accountDetailsService;
+
+    private final AccountPrivacyService accountPrivacyService;
 
     @GetMapping("/info")
     public RestBean<AccountVo> userInfo(@RequestAttribute(ATTR_USER_ID) Integer id) {
@@ -61,6 +66,20 @@ public class AccountController {
             @RequestAttribute(ATTR_USER_ID) Integer id,
             @RequestBody @Valid ChangePasswordVo vo) {
         return messageHandle(() -> accountService.changePassword(id, vo));
+    }
+
+
+    @PostMapping("/save-privacy")
+    public RestBean<Void> savePrivacy(
+            @RequestAttribute(ATTR_USER_ID) Integer id,
+            @RequestBody @Valid SaveAccountPrivacyVo vo
+    ) {
+        return messageHandle(() -> accountPrivacyService.saveAccountPrivacy(id, vo));
+    }
+
+    @GetMapping("/privacy")
+    public RestBean<AccountPrivacyVo> getPrivacy(@RequestAttribute(ATTR_USER_ID) Integer id) {
+        return RestBean.success(accountPrivacyService.getAccountPrivacy(id).asViewObject(AccountPrivacyVo.class));
     }
 
 

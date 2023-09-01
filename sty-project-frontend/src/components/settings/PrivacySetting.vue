@@ -1,13 +1,32 @@
 <template>
-  <div style="margin: auto; max-width: 600px">
-    <div style="margin-top: 20px">
+  <div style="margin: auto; max-width: 600px" v-loading="loading">
+    <div style="margin-top: 20px" v-loading="loading">
       <Card :icon="Setting" title="隐私设置" desc="在这里可以设置您的隐私可见性">
         <div class="checkbox-list">
-          <el-checkbox>公开展示我的手机号</el-checkbox>
-          <el-checkbox>公开展示我的电子邮件地址</el-checkbox>
-          <el-checkbox>公开展示我的微信号</el-checkbox>
-          <el-checkbox>公开展示我的QQ号</el-checkbox>
-          <el-checkbox>公开展示我的性别</el-checkbox>
+          <el-checkbox
+              @change="doChange('phone', privacyForm.phone)" v-model="privacyForm.phone"
+          >公开展示我的手机号
+          </el-checkbox>
+          <el-checkbox
+              v-model="privacyForm.email"
+              @change="doChange('email', privacyForm.email)"
+          >公开展示我的电子邮件地址
+          </el-checkbox>
+          <el-checkbox
+              v-model="privacyForm.wx"
+              @change="doChange('wx', privacyForm.wx)"
+          >公开展示我的微信号
+          </el-checkbox>
+          <el-checkbox
+              v-model="privacyForm.qq"
+              @change="doChange('qq', privacyForm.qq)"
+          >公开展示我的QQ号
+          </el-checkbox>
+          <el-checkbox
+              v-model="privacyForm.gender"
+              @change="doChange('gender', privacyForm.gender)"
+          >公开展示我的性别
+          </el-checkbox>
         </div>
       </Card>
       <Card style="margin: 20px 0" :icon="Setting" title="修改密码" desc="在这里修改密码">
@@ -45,11 +64,10 @@
 <script setup lang="ts">
 import {Lock, Setting, Switch} from '@element-plus/icons-vue'
 import Card from "@/components/Card.vue";
-import {reactive, ref} from "vue";
+import {onBeforeMount, reactive, ref} from "vue";
 import type {FormItemProp, FormInstance} from "element-plus";
-import {post} from "@/net";
+import {get, post} from "@/net";
 import {ElMessage} from "element-plus";
-
 const passwordIsValid = ref<boolean>(false)
 const formRef = ref()
 const changePasswordForm = reactive({
@@ -57,6 +75,42 @@ const changePasswordForm = reactive({
   newPassword: '',
   repeatNewPassword: ''
 })
+const loading = ref<boolean>(true)
+const privacyForm = reactive({
+  phone: false,
+  email: false,
+  wx: false,
+  qq: false,
+  gender: false
+})
+
+onBeforeMount(() => {
+  get('/api/user/privacy', (e) => {
+    privacyForm.phone = e.phone
+    privacyForm.email = e.email
+    privacyForm.wx = e.wx
+    privacyForm.qq = e.qq
+    privacyForm.gender = e.gender
+    loading.value = false
+  })
+})
+
+
+
+
+type Type = 'phone' | 'email' | 'qq' | 'wx' | 'gender'
+
+const doChange = (type: Type, flag: boolean) => {
+  post('/api/user/save-privacy', {
+    type: type,
+    flag: flag
+  }, () => {
+    ElMessage.success('保存信息成功')
+  }, (message) => {
+    ElMessage.warning(message)
+  })
+}
+
 
 const onValidate = (prop: FormItemProp, isValid: boolean) => {
   if (prop === 'password')
