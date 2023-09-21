@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.MDC;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * @author mqz
@@ -30,11 +32,17 @@ public class RequestLogFilter extends OncePerRequestFilter {
 
     private final SnowflakeIdGenerator snowflakeIdGenerator;
 
+    private final Set<String> IGNORE = Set.of("/images");
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    FilterChain filterChain)
+                                    @NotNull FilterChain filterChain)
             throws ServletException, IOException {
+        if (checkIsIgnore(request.getServletPath())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         long startTime = System.currentTimeMillis();
         logRequestStart(request);
         ContentCachingResponseWrapper wrapper = new ContentCachingResponseWrapper(response);
@@ -66,5 +74,12 @@ public class RequestLogFilter extends OncePerRequestFilter {
         int status = wrapper.getStatus();
         String content = status != 200 ? status + "错误" : new String(wrapper.getContentAsByteArray());
         log.info("请求处理耗时: {}ms | 响应结果: {}", time, content);
+    }
+
+    private boolean checkIsIgnore(String url) {
+        for (var ignore : IGNORE) {
+            if (ignore.startsWith(url)) return true;
+        }
+        return false;
     }
 }

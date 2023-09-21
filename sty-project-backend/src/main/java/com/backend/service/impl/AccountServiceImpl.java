@@ -9,7 +9,6 @@ import com.backend.utils.FlowUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -83,7 +82,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         String username = info.getUsername();
         if (existUserByUsername(username)) return "该用户名已被他人使用，请重新更换";
         String password = encoder.encode(info.getPassword());
-        Account account = new Account(null, username, password, email, Const.ROLE_DEFAULT, new Date());
+        Account account = new Account(null, username, password, email, Const.ROLE_DEFAULT, new Date(), null);
         if (!save(account)) return "内部错误, 注册失败";
         deleteRegisterEmail(email);
         return null;

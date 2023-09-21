@@ -18,4 +18,6 @@ public class AccountVo {
 
     Date registerTime;
 
+    String avatar;
+
 }

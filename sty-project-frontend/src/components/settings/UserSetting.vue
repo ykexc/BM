@@ -52,7 +52,7 @@
               </el-col>
               <el-col :span="6">
                 <el-button :disabled="coldTime > 0" @click="sendCode" type="success" plain style="width: 100%">
-                  {{coldTime > 0 ? coldTime + '秒' : '请获取验证码'}}
+                  {{ coldTime > 0 ? coldTime + '秒' : '请获取验证码' }}
                 </el-button>
               </el-col>
             </el-row>
@@ -73,7 +73,17 @@
       <el-affix :offset="75">
         <Card>
           <div style="text-align: center; padding: 5px 15px">
-            <el-avatar :size="70" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+            <el-avatar :size="70" :src="userUseStore.avatarUrl"></el-avatar>
+            <div style="margin: 5px 0">
+              <el-upload :action="axios.defaults.baseURL + '/api/image/avatar'"
+                         :show-file-list="false"
+                         :before-upload="beforeAvatarUpload"
+                         :on-success="uploadSuccess"
+                         :headers="accessHeader()"
+              >
+                <el-button size="small" round>修改头像</el-button>
+              </el-upload>
+            </div>
             <div style="font-weight: bold">你好,{{ username }}</div>
           </div>
           <el-divider style="margin: 10px 0"/>
@@ -100,9 +110,10 @@ import {
 import userStore from '@/stores/counter'
 import {storeToRefs} from "pinia";
 import {computed, onMounted, reactive, ref} from "vue";
-import type {FormItemProp, FormInstance} from "element-plus";
-import {get, post} from "@/net";
+import type {FormItemProp, FormInstance, UploadRawFile, UploadFile, UploadFiles} from "element-plus";
+import {accessHeader, get, post} from "@/net";
 import {ElMessage} from "element-plus";
+import axios from "axios";
 
 const userUseStore = userStore()
 const {username, registerTime, email} = storeToRefs(userUseStore)
@@ -159,7 +170,7 @@ const rules = {
     {type: 'email', message: '请输入合法电子邮件地址', trigger: 'blur'}
   ],
   code: [
-    {required: true, message: '请输入获取的验证码' , trigger: 'true'},
+    {required: true, message: '请输入获取的验证码', trigger: 'true'},
     {min: 6, max: 6, message: '请输入合法的6位数字验证码', trigger: ['blur', 'change']}
   ]
 }
@@ -225,6 +236,23 @@ const doSaveEmail = (formEl: FormInstance | undefined) => {
       )
     }
   })
+}
+
+const beforeAvatarUpload = (rawFile: UploadRawFile): boolean => {
+  if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
+    ElMessage.error('头像只能为jpeg/png格式')
+    return false
+  } else if (rawFile.size / 1024 > 100) {
+    ElMessage.error('头像大小不能大于100kb')
+    return false
+  }
+  return true
+}
+
+const uploadSuccess = (response: any, _uploadFile: UploadFile, _uploadFiles: UploadFiles) => {
+  ElMessage.success('头像上传成功')
+  userUseStore.avatar = response.data
+
 }
 
 </script>

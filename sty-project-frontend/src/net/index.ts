@@ -18,6 +18,7 @@ const defaultError = (error: Error | AxiosError) => {
 }
 
 const defaultFailure = (message: string, status: number, url: string) => {
+
     console.warn(`请求地址: ${url}, 状态码: ${status}, 错误信息: ${message}`)
     ElMessage.warning(message)
 }
@@ -26,7 +27,7 @@ function takeAccessToken(): string | null {
     const str = localStorage.getItem(authItemName) || sessionStorage.getItem(authItemName);
     if (!str) return null
     const authObj = JSON.parse(str)
-    if (authObj.expire <= new Date().getMilliseconds()) {
+    if (authObj.expire <= new Date().getTime()) {
         deleteAccessToken()
         ElMessage.warning("登录状态已过期，请重新登录！")
         return null
@@ -102,4 +103,4 @@ function authorized(): boolean {
     return takeAccessToken() != null
 }
 
-export {post, get, login, logout, authorized}
+export {post, get, login, logout, authorized, accessHeader}
