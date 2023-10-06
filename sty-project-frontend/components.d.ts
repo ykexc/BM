@@ -38,12 +38,15 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     ForgetPage: typeof import('./src/components/welcome/ForgetPage.vue')['default']
+    LightCard: typeof import('./src/components/LightCard.vue')['default']
     LoginPage: typeof import('./src/components/welcome/LoginPage.vue')['default']
     PrivacySetting: typeof import('./src/components/settings/PrivacySetting.vue')['default']
     RegisterPage: typeof import('./src/components/welcome/RegisterPage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TopicList: typeof import('./src/components/forum/TopicList.vue')['default']
     UserSetting: typeof import('./src/components/settings/UserSetting.vue')['default']
+    Weather: typeof import('./src/components/Weather.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

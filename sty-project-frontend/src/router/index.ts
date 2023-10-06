@@ -32,6 +32,13 @@ const router = createRouter({
             name: 'index',
             component: () => import('@/views/IndexView.vue'),
             children: [
+
+                {
+                    path: '',
+                    name: 'topic-list',
+                    component: () => import('@/components/forum/TopicList.vue')
+                },
+
                 {
                     path: 'user-setting',
                     name: 'user-setting',
