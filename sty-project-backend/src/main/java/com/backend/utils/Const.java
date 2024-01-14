@@ -25,4 +25,11 @@ public final class Const {
     public final static String ROLE_DEFAULT = "user";
 
     public final static Object NULL = null;
+
+    // 论坛相关
+    public static final String FORUM_WEATHER_CACHE = "weather:cache:";
+    public static final String FORUM_IMAGE_COUNTER = "forum:image:";
+
+    public static final String FORUM_CREATE_TOPIC = "forum:topic:create:";
+
 }

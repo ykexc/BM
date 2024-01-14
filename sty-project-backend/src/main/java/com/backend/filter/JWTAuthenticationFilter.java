@@ -41,6 +41,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         log.info(String.valueOf(decodedJWT == null));
         if (decodedJWT != null) {
             UserDetails user = jwtUtil.toUser(decodedJWT);
+            System.out.println(user.toString());
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                     = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

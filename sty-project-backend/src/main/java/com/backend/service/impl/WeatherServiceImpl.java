@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
+import static com.backend.utils.Const.FORUM_WEATHER_CACHE;
+
+
 /**
  * @author mqz
  */
@@ -44,7 +47,7 @@ public class WeatherServiceImpl implements WeatherService {
         if (geo == null) return null;
         JSONObject location = geo.getJSONArray("location").getJSONObject(0);
         int id = location.getInteger("id");
-        String key = "weather:" + id;
+        String key = FORUM_WEATHER_CACHE + id;
         String cache = redisTemplate.opsForValue().get(key);
         if (cache != null) {
             return JSONObject.parseObject(cache, WeatherVo.class);

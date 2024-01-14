@@ -17,6 +17,9 @@ public class FlowUtil {
 
     private final StringRedisTemplate redisTemplate;
 
+
+    private static final LimitAction defaultAction = overclock -> overclock;
+
     /**
      * 限制行为策略
      */
@@ -26,7 +29,7 @@ public class FlowUtil {
 
 
     public boolean limitOnceCheck(String key, int blockTime) {
-        return internalCheck(key, blockTime, e -> e);
+        return internalCheck(key, blockTime, defaultAction);
     }
 
     /**
@@ -47,18 +50,19 @@ public class FlowUtil {
 
     /**
      * 多次频率限制, 超出范围封禁用户
+     *
      * @param counterKey 计数键
-     * @param blockKey 黑名单键
-     * @param blockTime 封禁时间
-     * @param freq 请求频率限制
-     * @param period 限制时间
+     * @param blockKey   黑名单键
+     * @param blockTime  封禁时间
+     * @param freq       请求频率限制
+     * @param period     限制时间
      * @return 是否通过限流
      */
     public boolean limitPeriodCheck(String counterKey, String blockKey, int blockTime, int freq, int period) {
         return this.internalCheck(counterKey, freq, period, isExceed -> {
-            if (isExceed)
+            if (!isExceed)
                 redisTemplate.opsForValue().set(blockKey, "", blockTime, TimeUnit.SECONDS);
-            return !isExceed;
+            return isExceed;
         });
     }
 
@@ -74,11 +78,24 @@ public class FlowUtil {
     private boolean internalCheck(String key, int freq, int period, LimitAction action) {
         if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
             Long v = Optional.ofNullable(redisTemplate.opsForValue().increment(key)).orElse(0L);
-            return action.run(v > freq);
+            return action.run(v < freq);
         } else {
             redisTemplate.opsForValue().set(key, "1", period, TimeUnit.SECONDS);
             return true;
         }
+    }
+
+
+    /**
+     * 针对时间段内多次请求限制,如3s内20此请求
+     *
+     * @param counterKey 技术键
+     * @param frequency  请求频率
+     * @param period     技术周期
+     * @return 是否通过检查
+     */
+    public boolean limitPeriodCounterCheck(String counterKey, int frequency, int period) {
+        return this.internalCheck(counterKey, frequency, period, defaultAction);
     }
 
 }

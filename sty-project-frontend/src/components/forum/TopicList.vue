@@ -3,7 +3,7 @@
   <div style="display: flex; margin: 20px auto; gap: 20px; max-width: 900px">
     <div style="flex: 1">
       <light-card>
-        <div class="create-topic">
+        <div class="create-topic" @click="editor = true">
           <el-icon>
             <EditPen/>
           </el-icon>
@@ -64,6 +64,10 @@
         </div>
       </div>
     </div>
+    <TopicEditor
+        @success="editor = false"
+        @close="editor = false"
+         :show="editor"/>
   </div>
 
 
@@ -74,14 +78,15 @@
 import {CollectionTag, Calendar, EditPen} from '@element-plus/icons-vue'
 import LightCard from "@/components/LightCard.vue";
 import Weather from "@/components/Weather.vue";
-import {computed, reactive} from "vue";
+import {computed, reactive, ref} from "vue";
 import {get} from "@/net";
 import {ElMessage} from "element-plus";
+import TopicEditor from "@/components/TopicEditor.vue";
 
 
 const today = computed(() => {
   const date = new Date()
-  return `${date.getFullYear()} 年 ${date.getMonth()} 月 ${date.getDay()}  日`
+  return `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()}  日`
 })
 
 const weather = reactive({
@@ -91,6 +96,7 @@ const weather = reactive({
   success: false
 })
 
+const editor = ref(false)
 
 navigator.geolocation.getCurrentPosition(position => {
   const longitude = position.coords.longitude
@@ -118,7 +124,7 @@ navigator.geolocation.getCurrentPosition(position => {
 .info-text {
   display: flex;
   justify-content: space-between;
-  color: grey;
+  color: #fd4072;
   font-size: 14px;
 }
 

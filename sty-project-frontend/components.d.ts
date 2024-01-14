@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Card: typeof import('./src/components/Card.vue')['default']
+    ColorDot: typeof import('./src/components/ColorDot.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
@@ -16,6 +17,7 @@ declare module 'vue' {
     ElCol: typeof import('element-plus/es')['ElCol']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDivider: typeof import('element-plus/es')['ElDivider']
+    ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElForm: typeof import('element-plus/es')['ElForm']
@@ -44,6 +46,7 @@ declare module 'vue' {
     RegisterPage: typeof import('./src/components/welcome/RegisterPage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TopicEditor: typeof import('./src/components/TopicEditor.vue')['default']
     TopicList: typeof import('./src/components/forum/TopicList.vue')['default']
     UserSetting: typeof import('./src/components/settings/UserSetting.vue')['default']
     Weather: typeof import('./src/components/Weather.vue')['default']
